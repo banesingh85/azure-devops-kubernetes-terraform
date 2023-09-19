@@ -12,6 +12,7 @@ stages:
   - job: SecondJob
     steps:
     - bash: echo Build SecondJob
+    
 steps:
 - script: echo Job1 Steps1!
   displayName: 'Run a one-line script'
