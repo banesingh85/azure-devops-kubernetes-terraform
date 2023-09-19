@@ -10,10 +10,15 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
+- script: echo job1 -Hello, world! changes!
   displayName: 'Run a one-line script'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
+    echo more information
   displayName: 'Run a multi-line script'
+- job: job2
+  steps:
+  -script: echo Job2!
+  displyName: 'Run a one-line script'
