@@ -8,7 +8,7 @@ stages:
   jobs:
   - job: FirstJob
     steps:
-    - bash: echo Build FirstJob
+    - bash: echo Build FirstJobs
   - job: SecondJob
     steps:
     - bash: echo Build SecondJob
