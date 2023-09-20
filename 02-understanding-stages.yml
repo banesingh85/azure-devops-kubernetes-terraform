@@ -29,6 +29,3 @@ stages:
     steps:
     - bash: echo ProdDeployJob
 
-steps:
-- script: echo Job1 Steps1!
-  displayName: 'Run a one-line script'
