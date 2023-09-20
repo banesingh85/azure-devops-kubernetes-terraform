@@ -33,4 +33,9 @@ stages:
   - job: ProdDeployJob
     steps:
     - bash: echo ProdDeployJob
+    - bash: java -version
+    - bash: node --version
+    - bash: python --version
+    - bash: mvn -version
+    
 

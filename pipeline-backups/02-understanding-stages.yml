@@ -2,7 +2,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
 stages:
 - stage: Build
@@ -18,30 +18,12 @@ stages:
     - bash: echo $(System.DefaultWorkingDirectory)
     - bash: ls -R $(System.DefaultWorkingDirectory)
     - bash: echo $(Build.ArtifactStagingDirectory)
-    - bash: java -version
-    - bash: node --version
-    - bash: python --version 
-    - bash: mvn -version 
-    - bash: ls -R $(Build.ArtifactStagingDirectory)
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: |
-          **/*.yaml
-          **/*.tf
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    - bash: ls -R $(Build.ArtifactStagingDirectory)
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-  # - job: SecondJob
-  #   steps:
-  #   - bash: echo Build SecondJob
+#   - job: SecondJob
+#     steps:
+#     - bash: echo Build SecondJob
 # - stage: DevDeploy
 #   variables:
-#     environment: Dev
+#     environment: dev
 #   dependsOn: Build
 #   jobs:
 #   - job: DevDeployJob
@@ -49,17 +31,20 @@ stages:
 #     - bash: echo $(environment)DeployJob
 # - stage: QADeploy
 #   variables:
-#     environment: QA
+#     environment: qa
 #   dependsOn: Build
 #   jobs:
 #   - job: QADeployJob
 #     steps:
 #     - bash: echo $(environment)DeployJob
 # - stage: ProdDeploy
+#   variables:
+#     environment: prod 
 #   dependsOn: 
 #   - DevDeploy
 #   - QADeploy
 #   jobs:
 #   - job: ProdDeployJob
 #     steps:
-#     - bash: echo ProdDeployJob
+#     - bash: echo $(environment)DeployJob
+
