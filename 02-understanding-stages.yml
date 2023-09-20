@@ -3,6 +3,7 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+
 stages:
 - stage: Build
   jobs:
@@ -12,6 +13,9 @@ stages:
   - job: SecondJob
     steps:
     - bash: echo Build SecondJob
+- stage: DevDeploy
+- stage: QADeploy
+- stage: ProdDeploy
     
 steps:
 - script: echo Job1 Steps1!
