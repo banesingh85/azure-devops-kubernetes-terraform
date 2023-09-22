@@ -27,3 +27,5 @@ variable cluster_name {
 variable resource_group {
   default = "kubernetes"
 }
+
+
