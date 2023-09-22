@@ -3,11 +3,12 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+
 steps:
-- task: TerraformTaskV4@0
+- task: TerraformTaskV4@4
   displayName: 'Install Terraform'
   inputs:
-    terraformVersion: 'latest'  
+    terraformVersion: 'latest' 
 
 steps:
 - script: echo K8S Terraform Azure!
