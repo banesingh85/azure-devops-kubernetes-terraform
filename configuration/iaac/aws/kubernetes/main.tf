@@ -17,9 +17,22 @@ resource "aws_default_vpc" "default" {
 
 }
 
-data "aws_subnet_ids" "subnets" {
-  vpc_id = aws_default_vpc.default.id  # Specify the VPC ID to fetch subnet IDs within.
+# ...
+
+# Define a data source to fetch subnet information within a specific VPC.
+data "aws_subnet" "subnets" {
+  for_each = aws_default_vpc.default.subnets
+  id       = each.value
 }
+
+# Create a variable to store subnet IDs for later use.
+variable "subnet_ids" {
+  type    = list(string)
+  default = [for subnet in data.aws_subnet.subnets : subnet.id]
+}
+
+# ...
+
 
 
 provider "kubernetes" {
