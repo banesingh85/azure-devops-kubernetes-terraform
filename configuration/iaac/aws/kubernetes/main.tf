@@ -24,9 +24,9 @@ resource "aws_default_vpc" "default" {
 
 }
 
-data "aws_subnet_ids" "subnets" {
-  vpc_id = aws_default_vpc.default.id  # Specify the VPC ID to fetch subnet IDs within.
-}
+#data "aws_subnet_ids" "subnets" {
+ # vpc_id = aws_default_vpc.default.id  # Specify the VPC ID to fetch subnet IDs within.
+#}
 
 
 provider "kubernetes" {
