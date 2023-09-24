@@ -13,19 +13,18 @@ terraform {
   }
 }
 
-resource "aws_default_vpc" "default" {
+#resource "aws_default_vpc" "default" {
+#}
 
-}
-
-data "aws_subnet_ids" "subnets" {
-  vpc_id = aws_default_vpc.default.id
-}
+#data "aws_subnet_ids" "subnets" {
+ # vpc_id = aws_default_vpc.default.id
+#}
 
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
-  version                = "~> 2.12"
+  version                = "~> 4.0"
 }
 
 module "in28minutes-cluster" {
@@ -34,8 +33,8 @@ module "in28minutes-cluster" {
   cluster_version = "1.14"
   subnets = ["subnet-0db5d4bc61b3bcdfc", "subnet-0837d9445dd49afea"]
   #subnets = data.aws_subnet_ids.subnets.ids
-  vpc_id          = aws_default_vpc.default.id
-  #vpc_id         = "vpc-020a4fecf416cdf2d"
+  #vpc_id          = aws_default_vpc.default.id
+  vpc_id         = "vpc-020a4fecf416cdf2d"
 
   node_groups = [
     {
