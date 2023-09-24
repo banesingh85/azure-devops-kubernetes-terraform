@@ -3,7 +3,14 @@
 # Uses default VPC and Subnet. Create Your Own VPC and Private Subnets for Prod Usage.
 # terraform-backend-state-in28minutes-123
 # AKIA4AHVNOD7OOO6T4KI
-
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
 
 terraform {
   backend "s3" {
@@ -17,22 +24,9 @@ resource "aws_default_vpc" "default" {
 
 }
 
-# ...
-
-# Define a data source to fetch subnet information within a specific VPC.
-data "aws_subnet" "subnets" {
-  for_each = aws_default_vpc.default.subnets
-  id       = each.value
+data "aws_subnet_ids" "subnets" {
+  vpc_id = aws_default_vpc.default.id  # Specify the VPC ID to fetch subnet IDs within.
 }
-
-# Create a variable to store subnet IDs for later use.
-variable "subnet_ids" {
-  type    = list(string)
-  default = [for subnet in data.aws_subnet.subnets : subnet.id]
-}
-
-# ...
-
 
 
 provider "kubernetes" {
