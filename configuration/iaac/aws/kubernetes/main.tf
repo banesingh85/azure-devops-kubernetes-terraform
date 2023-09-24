@@ -1,67 +1,64 @@
-# Define the Terraform backend configuration for storing state.
+# aws --version
+# aws eks --region us-east-1 update-kubeconfig --name in28minutes-cluster
+# Uses default VPC and Subnet. Create Your Own VPC and Private Subnets for Prod Usage.
+# arn:aws:s3:::aws-kubernetes-cluster-iaac-pipeline-tfstate
+# AKIAYWNOFTJDFS5CIOAV
+
+
 terraform {
   backend "s3" {
-    bucket = "mybucket" # Specify the S3 bucket where Terraform state will be stored (will be overridden during build).
-    key    = "path/to/my/key" # Specify the key or path within the S3 bucket for Terraform state (will be overridden during build).
-    region = "us-east-1" # Set the AWS region for the S3 bucket.
+    bucket = "mybucket" # Will be overridden from build
+    key    = "path/to/my/key" # Will be overridden from build
+    region = "us-east-1"
   }
 }
 
-# Create an AWS default VPC resource.
 resource "aws_default_vpc" "default" {
-  # This resource represents the default Virtual Private Cloud (VPC) in your AWS account.
+
 }
 
-# Define a data source to fetch subnet IDs within the default VPC.
 data "aws_subnet_ids" "subnets" {
-  # vpc_id = aws_default_vpc.default.id
-  # Uncomment and specify the VPC ID to fetch subnet IDs within a specific VPC.
+  vpc_id = aws_default_vpc.default.id
 }
 
-# Configure the Kubernetes provider to interact with the EKS cluster.
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
-  version                = "~> 2.12" # Specify the desired Kubernetes provider version.
+  version                = "~> 2.12"
 }
 
-# Create an Amazon EKS cluster using the specified module.
-module "eks_cluster" {
+module "in28minutes-cluster" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = "in28minutes-cluster"
-  cluster_version = "1.14" # Specify the desired EKS cluster version.
+  cluster_version = "1.14"
+  subnets = ["subnet-0db5d4bc61b3bcdfc", "subnet-0837d9445dd49afea"]
+  #subnets = data.aws_subnet_ids.subnets.ids
   vpc_id          = aws_default_vpc.default.id
-}
+  #vpc_id         = "vpc-020a4fecf416cdf2d"
 
-# Create a node group within the EKS cluster.
-module "node_group" {
-  source = "terraform-aws-modules/eks/aws//modules/node_groups"
-
-  cluster_name = module.eks_cluster.cluster_name
-  node_groups = {
-    eks_nodes = {
+  node_groups = [
+    {
+      instance_type = "t2.micro"
+      max_capacity  = 5
       desired_capacity = 2
-      max_capacity     = 2
-      min_capacity     = 2
-      instance_type    = "t2.micro"
+      min_capacity  = 2
     }
-  }
-
-  subnets = data.aws_subnet_ids.subnets.ids
+  ]
 }
 
-# Fetch information about the EKS cluster.
 data "aws_eks_cluster" "cluster" {
   name = module.in28minutes-cluster.cluster_id
 }
 
-# Fetch authentication details for the EKS cluster.
 data "aws_eks_cluster_auth" "cluster" {
   name = module.in28minutes-cluster.cluster_id
 }
 
-# Create a Kubernetes cluster role binding for ServiceAccount permissions.
+
+# We will use ServiceAccount to connect to K8S Cluster in CI/CD mode
+# ServiceAccount needs permissions to create deployments 
+# and services in default namespace
 resource "kubernetes_cluster_role_binding" "example" {
   metadata {
     name = "fabric8-rbac"
@@ -78,7 +75,7 @@ resource "kubernetes_cluster_role_binding" "example" {
   }
 }
 
-# Configure the AWS provider with the default AWS region.
+# Needed to set the default region
 provider "aws" {
   region  = "us-east-1"
 }
