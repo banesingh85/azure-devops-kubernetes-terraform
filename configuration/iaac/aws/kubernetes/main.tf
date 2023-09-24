@@ -9,7 +9,7 @@ terraform {
   backend "s3" {
     bucket = "mybucket" # Will be overridden from build
     key    = "path/to/my/key" # Will be overridden from build
-    region = "us-east-1"
+    region = "ap-south-1"
   }
 }
 
@@ -34,9 +34,8 @@ module "in28minutes-cluster" {
   cluster_version = "1.14"
   subnets         = ["subnet-085fa3717ec895a27", "subnet-0dd3ce82b63572e7e"] #CHANGE
   #subnets = data.aws_subnet_ids.subnets.ids
-  vpc_id          = aws_default_vpc.default.id
-
-  #vpc_id         = "vpc-028d87d7b21d25184"
+  #vpc_id          = aws_default_vpc.default.id
+  vpc_id         = "vpc-028d87d7b21d25184"
 
   node_groups = [
     {
@@ -78,5 +77,5 @@ resource "kubernetes_cluster_role_binding" "example" {
 
 # Needed to set the default region
 provider "aws" {
-  region  = "us-east-1"
+  region  = "ap-south-1"
 }
