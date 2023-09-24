@@ -1,7 +1,7 @@
 # aws --version
 # aws eks --region us-east-1 update-kubeconfig --name in28minutes-cluster
 # Uses default VPC and Subnet. Create Your Own VPC and Private Subnets for Prod Usage.
-# arn:aws:s3:::dev-application-backend-state-banesingh123
+# arn:aws:s3:::aws-kubernetes-cluster-iaac-pipeline-tfstate
 # AKIAYWNOFTJDFS5CIOAV
 
 
@@ -32,17 +32,17 @@ module "in28minutes-cluster" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = "in28minutes-cluster"
   cluster_version = "1.14"
-  subnets         = ["subnet-085fa3717ec895a27", "subnet-0dd3ce82b63572e7e"] #CHANGE
+  subnets         = ["subnet-0db5d4bc61b3bcdfc", "subnet-0837d9445dd49afea"] #CHANGE
   #subnets = data.aws_subnet_ids.subnets.ids
   #vpc_id          = aws_default_vpc.default.id
-  vpc_id         = "vpc-028d87d7b21d25184"
+  vpc_id         = "vpc-020a4fecf416cdf2d"
 
   node_groups = [
     {
       instance_type = "t2.micro"
-      max_capacity  = 5
-      desired_capacity = 3
-      min_capacity  = 3
+      max_capacity  = 2
+      desired_capacity = 2
+      min_capacity  = 2
     }
   ]
 }
