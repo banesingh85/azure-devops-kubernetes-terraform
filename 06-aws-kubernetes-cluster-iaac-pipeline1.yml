@@ -16,3 +16,9 @@ steps:
     backendServiceAWS: 'aws-for-terraform'
     backendAWSBucketName: 'aws-kubernetes-cluster-iaac-pipeline-tfstate'
     backendAWSKey: 'kubernetes-dev-tfstate'
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'aws'
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/aws/kubernetes'
+    environmentServiceNameAWS: 'aws-for-terraform'
